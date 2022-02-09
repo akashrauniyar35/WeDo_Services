@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,6 +9,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { NavigationContainer } from '@react-navigation/native'
 import { Provider } from 'react-redux'
@@ -20,8 +21,41 @@ import AuthStack from './src/navigation/AuthNavigation'
 
 
 const App = () => {
+  const [accessToken, setAccessToken] = useState(null);
+  const [refreshToken, setRefreshToken] = useState(null);
+
+
+  useEffect(() => {
+    getTokens()
+  })
+
+  const getTokens = async () => {
+    try {
+      const value = await AsyncStorage.getItem('accessToken')
+      if (value !== null) {
+        setAccessToken(value);
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+
+    try {
+      const value = await AsyncStorage.getItem('refreshToken')
+      if (value !== null) {
+        setRefreshToken(value);
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+
+
+  }
 
   return (
+    console.log('get access tocken from asybc runs', accessToken),
+    console.log('get refresh tocken from asybc runs', refreshToken),
     <Provider store={store}>
       <NavigationContainer>
         {/* <SafeAreaView /> */}

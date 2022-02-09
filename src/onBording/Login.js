@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, TextInput, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
-import { storeAccesToken, getAccessToken } from '../api/localStorage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { loginStyles } from './Styles';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,30 +11,51 @@ import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('dfdd@gmail.com');
     const [password, setPassword] = useState('Manakamana123');
+    const [accessToken, setAccessToken] = useState(null);
+    const [refreshToken, setRefreshToken] = useState(null);
     const dispatch = useDispatch();
     const isLoading = useSelector(state => state.authentication.isLoading)
+
+
 
     const loginHandler = async () => {
         const data = { email: email, password: password }
 
         dispatch(loginRequest());
         const response = await fetchLogin(data)
-        // console.log('promise', response.accessJWT)
-
-
 
         if (response.status === "success") {
             dispatch(loginSuccess())
 
-            const accessToken = response.accessJWT;
-            const refreshToken = response.refreshJWT
+            const accessToken = JSON.stringify(response.accessJWT)
+            const refreshToken = JSON.stringify(response.refreshJWT)
+            // console.log('refresh token', response)
+            setAccessToken(accessToken)
+            setRefreshToken(refreshToken)
 
-
+            saveTokens()
         }
-        storeAccesToken(accessToken)
-        getAccessToken()
+    }
+
+
+
+    const saveTokens = async () => {
+        try {
+            await AsyncStorage.setItem('accessToken', accessToken)
+        } catch (err) {
+            console.log(err)
+        }
+
+        try {
+            await AsyncStorage.setItem('refreshToken', refreshToken)
+        } catch (err) {
+            console.log(err)
+        }
+
+
 
     }
+
 
     return (
         <View style={loginStyles.container}>
