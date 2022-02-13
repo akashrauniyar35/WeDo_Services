@@ -16,9 +16,9 @@ import { Provider } from 'react-redux'
 import store from './src/redux/store';
 
 import Login from './src/onBording/Login'
-import AuthStack from './src/navigation/AuthNavigation'
+import AuthStack from './src/navigation/AuthNavigation';
 
-
+import Home from './src/navigation/AppNavigation';
 
 const App = () => {
   const [accessToken, setAccessToken] = useState(null);
@@ -28,6 +28,8 @@ const App = () => {
   useEffect(() => {
     getTokens()
   })
+
+
 
   const getTokens = async () => {
     try {
@@ -49,9 +51,8 @@ const App = () => {
     } catch (error) {
       console.log(error)
     }
-
-
   }
+
 
   return (
     console.log('get access tocken from asybc runs', accessToken),
@@ -59,7 +60,8 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         {/* <SafeAreaView /> */}
-        <AuthStack />
+        {/* <AuthStack /> */}
+        <Home />
       </NavigationContainer>
     </Provider>
   );

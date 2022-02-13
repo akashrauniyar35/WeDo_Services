@@ -29,14 +29,12 @@ const Login = ({ navigation }) => {
 
             const accessToken = JSON.stringify(response.accessJWT)
             const refreshToken = JSON.stringify(response.refreshJWT)
-            // console.log('refresh token', response)
             setAccessToken(accessToken)
             setRefreshToken(refreshToken)
 
             saveTokens()
         }
     }
-
 
 
     const saveTokens = async () => {
@@ -51,9 +49,6 @@ const Login = ({ navigation }) => {
         } catch (err) {
             console.log(err)
         }
-
-
-
     }
 
 
